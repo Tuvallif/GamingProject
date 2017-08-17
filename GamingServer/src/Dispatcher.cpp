@@ -16,6 +16,7 @@
 
 using namespace std;
 
+
 namespace npl {
 Dispatcher::Dispatcher(DispatcherHandler* handler) : MThread() {
 	cout << "Dispatcher created" << endl;
