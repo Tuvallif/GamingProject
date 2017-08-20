@@ -5,18 +5,21 @@
  *      Author: user
  */
 
-#include "UsersDataBase.h"
+
 #include <fstream>
 #include <stdio.h>
 #include <iostream>
 #include <algorithm>
 #include <string>
 #include <stdlib.h>
+#include <vector>
 #include "TCPMessangerProtocol.h"
+#include "UsersDataBase.h"
+
 
 using namespace std;
-using namespace npl;
-//namespace npl {
+namespace npl{
+
 
 UsersDataBase::UsersDataBase(  const string  & databaseFileName  ) :
 					fileName( databaseFileName ) {
@@ -193,9 +196,9 @@ bool UsersDataBase::validInputState(int inputState){
 }
 
 bool UsersDataBase::changeUserState(TCPSocket* userSocket, int newState){
-	User toChange = findUserBySocket(userSocket);
+	User* toChange = findUserBySocket(userSocket);
 	if(toChange != NULL && validInputState(newState)){
-		toChange.state = newState;
+		toChange->state = newState;
 		return true;
 	}
 

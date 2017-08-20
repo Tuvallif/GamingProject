@@ -24,15 +24,12 @@ public:
 	static const int STATE_SEEKING = 1;
 	static const int STATE_PLAYING = 2;
 	static const int STATE_BUSY = 3;
+	string username;
+	TCPSocket * socket;
+	int state;
 
 	User(	string username, TCPSocket * socket);
 
-
-
-	string username;
-	TCPSocket * socket;
-
-	int state;
 };
 }
 #endif /* USER_H_ */

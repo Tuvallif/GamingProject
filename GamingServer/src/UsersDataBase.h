@@ -20,6 +20,7 @@ namespace npl {
 
 class UsersDataBase {
 public:
+
 	UsersDataBase( const string  & databaseFileName );
 	virtual ~UsersDataBase();
 
