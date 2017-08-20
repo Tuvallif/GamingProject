@@ -68,7 +68,10 @@ public:
 	 * will return true with success or false otherwise
 	 */
 	bool changeUserState(TCPSocket* userSocket, int newState);
-
+	/**
+	 * this method returns a seeking user
+	 */
+	User* getSeekingUser(User* seeker);
 
 private:
 
@@ -96,10 +99,7 @@ private:
 	 * This method changes the state of the user in the online user list
 	 */
 	void changeStateToSeek(TCPSocket* socketToChange);
-	/**
-	 * this method checks that the input state is valid
-	 */
-	bool validInputState(int inputState);
+
 
 
 	const string fileName;

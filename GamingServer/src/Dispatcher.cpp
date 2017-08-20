@@ -172,8 +172,22 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 	 */
 	case SEEK:
 	{
-		userDB->seek(socket);
-		//todo match them together
+		User* secondUser = userDB->seek(socket);
+
+		//Other user also seeking state - start a match
+		if(secondUser != NULL){
+			User * firstUser = userDB->findUserBySocket(socket);
+			userDB->changeUserState(socket, User::STATE_BUSY);
+			userDB->changeUserState(secondUser->socket, User::STATE_BUSY);
+			sendCommandToClient(socket, GAME_STARTED, secondUser->username.c_str());
+			sendCommandToClient(secondUser->socket, GAME_STARTED, firstUser->username.c_str());
+			listener->remove(socket);
+			listener->remove(secondUser->socket);
+			// create new broker and pass them to the broker
+			dispatcherHandler->managePeerSession(firstUser, secondUser);
+
+
+		}
 		break;
 	}
 	case START_MATCH:
@@ -191,7 +205,16 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 		}
 		else if(status == User::STATE_SEEKING)
 		{
-			//to do start match
+			User * firstUser = userDB->findUserBySocket(socket);
+			User * secondUser = userDB->findUserByName(userName);
+			userDB->changeUserState(socket, User::STATE_BUSY);
+			userDB->changeUserState(secondUser->socket, User::STATE_BUSY);
+			sendCommandToClient(socket, GAME_STARTED, secondUser->username.c_str());
+			sendCommandToClient(secondUser->socket, GAME_STARTED, firstUser->username.c_str());
+			listener->remove(socket);
+			listener->remove(secondUser->socket);
+			// create new broker and pass them to the broker
+			dispatcherHandler->managePeerSession(firstUser, secondUser);
 		}
 		else if(status == User::STATE_DEFAULT)
 		{
@@ -204,8 +227,9 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 			userDB->changeUserState(socket, User::STATE_BUSY);
 			userDB->changeUserState(secondSocket, User::STATE_BUSY);
 
+			//sending request to other user
 			sendCommandToClient(secondSocket, REQUEST_START_MATCH, requestingSocketName.c_str());
-			//to do start match
+
 		}
 		else if(status == User::STATE_BUSY)
 		{

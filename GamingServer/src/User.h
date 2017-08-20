@@ -26,9 +26,22 @@ public:
 	static const int STATE_BUSY = 3;
 	string username;
 	TCPSocket * socket;
-	int state;
 
-	User(	string username, TCPSocket * socket);
+
+	User(string username, TCPSocket * socket);
+
+	bool changeState(int newState);
+
+	int getState();
+
+private:
+
+	int state;
+	/**
+	 * this method checks that the input state is valid
+	 */
+	bool validInputState(int inputState);
+
 
 };
 }

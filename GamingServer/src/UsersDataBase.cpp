@@ -22,7 +22,7 @@ namespace npl{
 
 
 UsersDataBase::UsersDataBase(  const string  & databaseFileName  ) :
-					fileName( databaseFileName ) {
+									fileName( databaseFileName ) {
 	/*
 	registerUser("tuval", "12345");
 	registerUser("ran", "rrrrr");
@@ -93,14 +93,14 @@ User* UsersDataBase::seek(TCPSocket* seekingSocket){
 		if ( it->socket == seekingSocket ) {
 			user = & (* it );
 		}
-		if(it->state == User::STATE_SEEKING && it->socket == seekingSocket)
+		if(it->getState() == User::STATE_SEEKING && it->socket == seekingSocket)
 		{
 			cout << "we found a seeker " + it->username << endl;
 			return & ( * it );
 		}
 	}
 	cout << "changing the state to seeking for " +user->username << endl;
-	user->state = User::STATE_SEEKING;
+	user->changeState(User::STATE_SEEKING);
 	return NULL;
 }
 
@@ -108,7 +108,7 @@ int UsersDataBase::checkAvilability(const string& userName)
 {
 	User* usr = findUserByName(userName);
 	if(usr != NULL){
-		return usr->state;
+		return usr->getState();
 	}
 	return -1;
 
@@ -187,22 +187,26 @@ User* UsersDataBase::findUserByName(const string& userName)
 	return NULL;
 }
 
-bool UsersDataBase::validInputState(int inputState){
-	if(inputState >= User::STATE_DEFAULT &&  inputState >= User::STATE_BUSY){
-		return true;
+bool UsersDataBase::changeUserState(TCPSocket* userSocket, int newState){
+	User* toChange = findUserBySocket(userSocket);
+	if(toChange != NULL){
+		return toChange->changeState(newState);
 	}
 
 	return false;
 }
 
-bool UsersDataBase::changeUserState(TCPSocket* userSocket, int newState){
-	User* toChange = findUserBySocket(userSocket);
-	if(toChange != NULL && validInputState(newState)){
-		toChange->state = newState;
-		return true;
+
+User* UsersDataBase::getSeekingUser(User* seeker){
+	User* usrToRtrn;
+	for(list<User>::iterator it = users.begin(); it != users.end(); it++){
+		if ( it->getState() == User::STATE_SEEKING ) {
+			usrToRtrn = & (* it );
+			return usrToRtrn;
+		}
 	}
 
-	return false;
+	return NULL;
 }
 
 string UsersDataBase::hashPasswordString(const string & password ){
