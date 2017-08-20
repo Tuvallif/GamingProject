@@ -169,7 +169,7 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 		}
 		break;
 	}
-	*/
+	 */
 	case SEEK:
 	{
 		userDB->seek(socket);
@@ -199,6 +199,10 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 			TCPSocket * secondSocket = userDB->findUserByName(userName)->socket;
 			string requestingSocketName = userDB->findUserBySocket(socket)->username;
 			openRequests[secondSocket] = socket;
+
+			//change state for both users to be busy
+			userDB->changeUserState(socket, User::STATE_BUSY);
+			userDB->changeUserState(secondSocket, User::STATE_BUSY);
 
 			sendCommandToClient(secondSocket, REQUEST_START_MATCH, requestingSocketName.c_str());
 			//to do start match
@@ -291,6 +295,22 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 			listener->remove(otherSocket);
 			// create new broker and pass them to the broker
 			dispatcherHandler->managePeerSession(firstUser, secondUser);
+		}
+		break;
+	}
+	case DECLINE_START_MATCH:
+	{
+		TCPSocket* otherSocket = findSocketInMap(socket);
+		if (otherSocket == NULL)
+		{
+			// peer not found. send session refused to socket
+			sendCommandToClient(socket, SESSION_REFUSED, NULL);
+		} else{
+			User * firstUser = userDB->findUserBySocket(socket);
+			User * secondUser = userDB->findUserBySocket(otherSocket);
+
+			sendCommandToClient(otherSocket, DECLINE_START_MATCH, firstUser->username.c_str());
+
 		}
 		break;
 	}

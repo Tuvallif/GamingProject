@@ -13,6 +13,7 @@
 #include "MTCPListener.h"
 #include "TCPMessangerProtocol.h"
 #include "UsersDataBase.h"
+#include "User.h"
 #include <stdlib.h>
 
 namespace npl {

@@ -19,6 +19,9 @@
 #include <map>
 #include <assert.h>
 #include <iterator>
+#include "User.h"
+
+
 
 namespace npl {
 

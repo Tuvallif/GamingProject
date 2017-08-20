@@ -13,12 +13,13 @@
 #include <string>
 #include <stdlib.h>
 #include "TCPMessangerProtocol.h"
-using namespace std;
 
-namespace npl {
+using namespace std;
+using namespace npl;
+//namespace npl {
 
 UsersDataBase::UsersDataBase(  const string  & databaseFileName  ) :
-			fileName( databaseFileName ) {
+					fileName( databaseFileName ) {
 	/*
 	registerUser("tuval", "12345");
 	registerUser("ran", "rrrrr");
@@ -182,6 +183,25 @@ User* UsersDataBase::findUserByName(const string& userName)
 
 	return NULL;
 }
+
+bool UsersDataBase::validInputState(int inputState){
+	if(inputState >= User::STATE_DEFAULT &&  inputState >= User::STATE_BUSY){
+		return true;
+	}
+
+	return false;
+}
+
+bool UsersDataBase::changeUserState(TCPSocket* userSocket, int newState){
+	User toChange = findUserBySocket(userSocket);
+	if(toChange != NULL && validInputState(newState)){
+		toChange.state = newState;
+		return true;
+	}
+
+	return false;
+}
+
 string UsersDataBase::hashPasswordString(const string & password ){
 	char passwordBuffer[64];
 	sprintf(passwordBuffer,"%u", hash_str(password.c_str()));
@@ -191,8 +211,8 @@ string UsersDataBase::hashPasswordString(const string & password ){
 #define B 76963 /* another prime */
 #define C 86969 /* yet another prime */
 #define FIRSTH 37 /* also prime */
-unsigned UsersDataBase::hash_str(const char* s)
-{
+
+unsigned UsersDataBase::hash_str(const char* s){
 	unsigned h = FIRSTH;
 	while (*s) {
 		h = (h * A) ^ (s[0] * B);

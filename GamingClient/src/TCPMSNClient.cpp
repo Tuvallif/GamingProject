@@ -93,7 +93,7 @@ void TCPMSNClient::answerRequest(string answer){
 	string userName = this->thread->getWAitingSocket();
 	this->thread->setState(false);
 	this->thread->setWAitingSocket("NULL");
-	if(answer == "Y"|| answer == "y")
+	if(answer == "YES"|| answer == "yes")
 	{
 		sendCommand(ACCEPT_REQUEST_MATCH, userName.c_str());
 	}

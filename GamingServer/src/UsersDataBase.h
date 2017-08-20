@@ -12,29 +12,11 @@
 #include <list>
 #include <string>
 #include "TCPSocket.h"
+#include "User.h"
 
 using namespace std;
 
 namespace npl {
-
-class User {
-public:
-	static const int STATE_DEFAULT = 0;
-	static const int STATE_SEEKING = 1;
-	static const int STATE_PLAYING = 2;
-	static const int STATE_BUSY = 3;
-
-	User(	string username, TCPSocket * socket){
-		this->username = username;
-		this->socket = socket;
-		this->state = STATE_DEFAULT;
-	}
-
-	string username;
-	TCPSocket * socket;
-
-	int state;
-};
 
 class UsersDataBase {
 public:
@@ -80,6 +62,12 @@ public:
 	 * this returns user by name
 	 */
 	User* findUserByName(const string& userName);
+	/**
+	 * This method changes the user state to the new state if the user is found
+	 * will return true with success or false otherwise
+	 */
+	bool changeUserState(TCPSocket* userSocket, int newState);
+
 
 private:
 
@@ -107,8 +95,10 @@ private:
 	 * This method changes the state of the user in the online user list
 	 */
 	void changeStateToSeek(TCPSocket* socketToChange);
-
-
+	/**
+	 * this method checks that the input state is valid
+	 */
+	bool validInputState(int inputState);
 
 
 	const string fileName;

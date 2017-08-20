@@ -189,6 +189,7 @@ int main() {
 		}
 		else if(commandType == "r")
 		{
+			cout << "got r(request) from server" << endl;
 			string answer = getWordAtIndexWithDlm(command, 1, " ");
 			client->answerRequest(answer);
 		}

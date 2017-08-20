@@ -18,8 +18,6 @@ namespace npl {
 		this->state = STATE_DEFAULT;
 	}
 
-	User::~User() {
-	// TODO Auto-generated destructor stub
-	}
+
 
 }

@@ -19,12 +19,13 @@ using namespace std;
 using namespace npl;
 
 TCPMSNClientThread::TCPMSNClientThread(TCPSocket * socket) :
-		MThread()
+						MThread()
 {
 	this->socket = socket;
 	string waitingSocketName = "NULL";
 	bool currStateWaiting = false;
 	listener = new MTCPListener();
+	currStateWaiting = false;
 }
 
 //move later
@@ -71,39 +72,42 @@ void TCPMSNClientThread::run()
 		int msg = htonl(* ( (int *) buffer ) );
 		cout << "got message " << msg << " length " << len << endl;
 
-		if ( msg == SEND_MSG_TO_PEER)
+		switch(msg){
+		case SEND_MSG_TO_PEER:
 		{
 			int msgLength = htonl(* ( (int *) &buffer[4] ) );
 			string msgText(&buffer[8],msgLength);
 			cout << "received message : " << msgText << endl;
-
+			break;
 		}
-		else if ( msg == GET_LIST_USERS)
+		case GET_LIST_USERS:
 		{
 			int msgLength = htonl(* ( (int *) &buffer[4] ) );
 			string msgText(&buffer[8],msgLength);
 			cout << "online users : " << msgText << endl;
 			vector<string> onlineUsers = splitString(msgText, USER_NAME_SEPERATOR);
-			for(int index = 0;index<onlineUsers.size();index++) {
+			for(int index = 0 ; index < onlineUsers.size() ; index++) {
 				cout << index << " : " << onlineUsers[ index ] << endl;
 			}
-
+			break;
 		}
-		else if ( msg == LOGIN_REGISTER_SUCCESFULL)
+		case LOGIN_REGISTER_SUCCESFULL:{
+			cout << "You are now logged in" << endl;
+			break;
+		}
+		case LOGIN_REGISTER_FAILED:
 		{
-			cout << "You are is now logged in" << endl;
-
-		}
-		else if ( msg == LOGIN_REGISTER_FAILED)
-		{
-			cout << "login failed, please try again" << endl;
-		}
-		else if(msg == MATCH_REJECTED){
 			int msgLength = htonl(* ( (int *) &buffer[4] ) );
 			string msgText(&buffer[8],msgLength);
 			cout << msgText << endl;
+			break;
 		}
-		else if(msg == REQUEST_START_MATCH){
+		case MATCH_REJECTED:
+		{
+			break;
+		}
+		case REQUEST_START_MATCH:
+		{
 			int msgLength = htonl(* ( (int *) &buffer[4] ) );
 			string userName(&buffer[8],msgLength);
 			if(currStateWaiting == true){
@@ -111,20 +115,26 @@ void TCPMSNClientThread::run()
 				cout << "You got a new request from " << userName << " but it was ignored" << endl;
 			}
 			else{
-			waitingSocketName = userName;
-			cout << "You got a new match request from " << userName << endl;
-			cout << "would you like to accept the new match with " << userName << "? format: r  <yes/no>" << endl;
+				waitingSocketName = userName;
+				cout << "You got a new match request from " << userName << endl;
+				cout << "would you like to accept the new match with " << userName << "? format: r  <yes/no>" << endl;
 			}
-
+			break;
 		}
-		else if(msg == DECLINE_START_MATCH){
-			cout << "whhwhwhw" << endl;
+		case DECLINE_START_MATCH:
+		{
+			int msgLength = htonl(* ( (int *) &buffer[4] ) );
+			string otherUserName(&buffer[8],msgLength);
+			cout << "User " +otherUserName + " declined your request." << endl;
+			break;
 		}
-
+		}
 	}
-
-
-
-
 	cout << "client thread stopped" << endl;
 }
+
+
+
+
+
+

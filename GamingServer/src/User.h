@@ -34,4 +34,5 @@ public:
 
 	int state;
 };
+}
 #endif /* USER_H_ */
