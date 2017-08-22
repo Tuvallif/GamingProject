@@ -35,6 +35,7 @@
 #define ACCEPT_REQUEST_MATCH       16
 #define DECLINE_START_MATCH        17
 #define GAME_STARTED               18
+#define REQUEST_MATCH_BUSY         19
 
 
 

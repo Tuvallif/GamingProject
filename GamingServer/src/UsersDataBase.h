@@ -39,7 +39,7 @@ public:
 	/**
 	 * return list of connected users
 	 */
-	list< User > listUsers();
+	list< User * > listUsers();
 
 	/**
 	 * return list of connected users in a string format
@@ -103,7 +103,7 @@ private:
 
 
 	const string fileName;
-	list< User > users;
+	list< User * > users;
 };
 
 } /* namespace npl */

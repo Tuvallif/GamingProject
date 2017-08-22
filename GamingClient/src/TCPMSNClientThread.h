@@ -27,13 +27,12 @@ class TCPMSNClientThread : public MThread {
 public:
 	TCPMSNClientThread(TCPSocket * socket);
 	bool getState();
-	string getWAitingSocket();
+	string getWaitingSocket();
 	void setState(bool newState);
-	void setWAitingSocket(string newName);
+	void setWaitingSocket(string newName);
 	virtual void run();
 private:
-	string waitingSocketName;
-	bool currStateWaiting;
+	string waitingUserName;
 	void removeUnansweredRequst(string newSocketName);
 	TCPSocket * socket;
 	MTCPListener * listener;

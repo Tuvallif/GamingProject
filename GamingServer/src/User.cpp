@@ -33,7 +33,7 @@ bool User:: changeState(int newState){
 }
 
 bool User::validInputState(int inputState){
-	if(inputState >= User::STATE_DEFAULT &&  inputState >= User::STATE_BUSY){
+	if(inputState >= User::STATE_DEFAULT &&  inputState <= User::STATE_BUSY){
 		return true;
 	}
 

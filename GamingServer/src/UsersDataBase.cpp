@@ -41,9 +41,9 @@ UsersDataBase::~UsersDataBase() {
  * return true if the user logged in successfully
  */
 bool UsersDataBase::login( const string & username, const string & password, TCPSocket * socket ){
-	list<User>::iterator it = users.begin();
+	list<User*>::iterator it = users.begin();
 	while (it != users.end()) {
-		if (it->username == username) {
+		if ((*it)->username == username) {
 			cout << "user " << username << " already logged in" << endl;
 		}
 		++ it;
@@ -52,7 +52,7 @@ bool UsersDataBase::login( const string & username, const string & password, TCP
 	string DBpassword;
 	if(getPassword(username, DBpassword)){
 		if(hashPasswordString(password) == DBpassword){
-			User user(username, socket);
+			User * user = new User(username, socket);
 			cout<< "user " << username << " is now logged in" << endl;
 			users.push_back(user);
 			return true;
@@ -62,7 +62,7 @@ bool UsersDataBase::login( const string & username, const string & password, TCP
 	} else {
 		registerUser( username, password );
 		cout<< "user " << username << " is now registered and logged in" << endl;
-		User user(username, socket);
+		User * user = new User(username, socket);
 		users.push_back(user);
 		return true;
 	}
@@ -71,7 +71,7 @@ bool UsersDataBase::login( const string & username, const string & password, TCP
 /**
  * return list of connected users
  */
-list< User > UsersDataBase::listUsers()
+list< User * > UsersDataBase::listUsers()
 {
 	return users;
 }
@@ -79,8 +79,8 @@ list< User > UsersDataBase::listUsers()
 string UsersDataBase::listUsersInString()
 {
 	string toReturn = "";
-	for(list<User>::iterator it = users.begin(); it != users.end(); it++){
-		toReturn += it->username;
+	for(list<User *>::iterator it = users.begin(); it != users.end(); it++){
+		toReturn += (*it)->username;
 		toReturn += USER_NAME_SEPERATOR;
 	}
 
@@ -88,19 +88,20 @@ string UsersDataBase::listUsersInString()
 }
 
 User* UsersDataBase::seek(TCPSocket* seekingSocket){
-	User * user = NULL;
-	for(list<User>::iterator it = users.begin(); it != users.end(); it++){
-		if ( it->socket == seekingSocket ) {
-			user = & (* it );
+
+	User * secondUser = NULL;
+	for(list<User*>::iterator it = users.begin(); it != users.end(); it++){
+		if ((*it)->socket == seekingSocket ) {
+			secondUser = (* it );
 		}
-		if(it->getState() == User::STATE_SEEKING && it->socket == seekingSocket)
+		if(((*it)->getState() == User::STATE_SEEKING) && ((*it)->socket != seekingSocket))
 		{
-			cout << "we found a seeker " + it->username << endl;
-			return & ( * it );
+			cout << "we found a seeker " + (*it)->username << endl;
+			return ( * it );
 		}
 	}
-	cout << "changing the state to seeking for " +user->username << endl;
-	user->changeState(User::STATE_SEEKING);
+	cout << "changing the state to seeking for " + secondUser->username << endl;
+	secondUser->changeState(User::STATE_SEEKING);
 	return NULL;
 }
 
@@ -119,9 +120,9 @@ int UsersDataBase::checkAvilability(const string& userName)
  */
 void UsersDataBase::logout( const string & username )
 {
-	list<User>::iterator it = users.begin();
+	list<User*>::iterator it = users.begin();
 	while (it != users.end()) {
-		if (it->username == username) {
+		if ((* it)->username == username) {
 			users.erase(it);
 			return;
 		}
@@ -164,9 +165,9 @@ bool UsersDataBase::registerUser( const string & username, const string & passwo
 User* UsersDataBase::findUserBySocket(TCPSocket* socket)
 {
 	User* usr;
-	for(list<User>::iterator it = users.begin(); it != users.end(); it++){
-		if ( it->socket == socket ) {
-			usr = & (* it );
+	for(list<User*>::iterator it = users.begin(); it != users.end(); it++){
+		if ( (*it)->socket == socket ) {
+			usr = (* it );
 			return usr;
 		}
 	}
@@ -177,9 +178,9 @@ User* UsersDataBase::findUserBySocket(TCPSocket* socket)
 User* UsersDataBase::findUserByName(const string& userName)
 {
 	User* usr;
-	for(list<User>::iterator it = users.begin(); it != users.end(); it++){
-		if ( it->username == userName ) {
-			usr = & (* it );
+	for(list<User*>::iterator it = users.begin(); it != users.end(); it++){
+		if ( (*it)->username == userName ) {
+			usr = (* it );
 			return usr;
 		}
 	}
@@ -199,9 +200,9 @@ bool UsersDataBase::changeUserState(TCPSocket* userSocket, int newState){
 
 User* UsersDataBase::getSeekingUser(User* seeker){
 	User* usrToRtrn;
-	for(list<User>::iterator it = users.begin(); it != users.end(); it++){
-		if ( it->getState() == User::STATE_SEEKING ) {
-			usrToRtrn = & (* it );
+	for(list<User*>::iterator it = users.begin(); it != users.end(); it++){
+		if ( (*it)->getState() == User::STATE_SEEKING ) {
+			usrToRtrn = (* it );
 			return usrToRtrn;
 		}
 	}

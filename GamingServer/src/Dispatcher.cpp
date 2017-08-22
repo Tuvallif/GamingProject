@@ -186,7 +186,6 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 			// create new broker and pass them to the broker
 			dispatcherHandler->managePeerSession(firstUser, secondUser);
 
-
 		}
 		break;
 	}
@@ -197,8 +196,8 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 		int dataLength = ntohl( *( (int * ) ( messageLength ) ) );
 		char dataBuffer[dataLength];
 		readFromSocket(socket, dataBuffer, sizeof(dataBuffer));
-		string userName(dataBuffer, dataLength);
-		int status = userDB->checkAvilability(userName);
+		string secondUserName(dataBuffer, dataLength);
+		int status = userDB->checkAvilability(secondUserName);
 
 		if(status == -1) {
 			sendCommandToClient(socket, MATCH_REJECTED, "The match could not be established, user not found or playing");
@@ -206,7 +205,7 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 		else if(status == User::STATE_SEEKING)
 		{
 			User * firstUser = userDB->findUserBySocket(socket);
-			User * secondUser = userDB->findUserByName(userName);
+			User * secondUser = userDB->findUserByName(secondUserName);
 			userDB->changeUserState(socket, User::STATE_BUSY);
 			userDB->changeUserState(secondUser->socket, User::STATE_BUSY);
 			sendCommandToClient(socket, GAME_STARTED, secondUser->username.c_str());
@@ -219,7 +218,7 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 		else if(status == User::STATE_DEFAULT)
 		{
 
-			TCPSocket * secondSocket = userDB->findUserByName(userName)->socket;
+			TCPSocket * secondSocket = userDB->findUserByName(secondUserName)->socket;
 			string requestingSocketName = userDB->findUserBySocket(socket)->username;
 			openRequests[secondSocket] = socket;
 
@@ -233,21 +232,19 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 		}
 		else if(status == User::STATE_BUSY)
 		{
-			//for sure not null because requesting user
-			char messageLength[4];
-			readFromSocket(socket, messageLength, sizeof(messageLength));
-			int dataLength = ntohl( *( (int * ) ( messageLength ) ) );
-			char dataBuffer[dataLength];
-			readFromSocket(socket, dataBuffer, sizeof(dataBuffer));
-			string secondSocketName(dataBuffer, dataLength);
-			TCPSocket * secondSocket = userDB->findUserByName(secondSocketName)->socket;
+
+
+			TCPSocket * secondSocket = userDB->findUserByName(secondUserName)->socket;
 			string requestingSocketName = userDB->findUserBySocket(socket)->username;
 			openRequests.insert(std::pair<TCPSocket*,TCPSocket*>(socket,secondSocket));
 
 
-			sendCommandToClient(secondSocket, REQUEST_START_MATCH, requestingSocketName.c_str());
+			sendCommandToClient(secondSocket, REQUEST_MATCH_BUSY, requestingSocketName.c_str());
 
-			sendCommandToClient(socket, DECLINE_START_MATCH, secondSocketName.c_str());
+			sendCommandToClient(socket, DECLINE_START_MATCH, secondUserName.c_str());
+		}
+		else{
+			sendCommandToClient(socket, DECLINE_START_MATCH, secondUserName.c_str());
 		}
 		break;
 	}
@@ -308,11 +305,15 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 		TCPSocket* otherSocket = findSocketInMap(socket);
 		if (otherSocket == NULL)
 		{
+			//remove from busy
+			userDB->changeUserState(socket, User::STATE_DEFAULT);
 			// peer not found. send session refused to socket
 			sendCommandToClient(socket, SESSION_REFUSED, NULL);
 		} else{
 			User * firstUser = userDB->findUserBySocket(socket);
 			User * secondUser = userDB->findUserBySocket(otherSocket);
+			userDB->changeUserState(firstUser->socket, User::STATE_PLAYING);
+			userDB->changeUserState(secondUser->socket, User::STATE_PLAYING);
 			sendCommandToClient(socket, GAME_STARTED, secondUser->username.c_str());
 			sendCommandToClient(otherSocket, GAME_STARTED, firstUser->username.c_str());
 			listener->remove(socket);
@@ -327,12 +328,18 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 		TCPSocket* otherSocket = findSocketInMap(socket);
 		if (otherSocket == NULL)
 		{
+			User * firstUser = userDB->findUserBySocket(socket);
+			userDB->changeUserState(firstUser->socket, User::STATE_DEFAULT);
+
 			// peer not found. send session refused to socket
-			sendCommandToClient(socket, SESSION_REFUSED, NULL);
+			sendCommandToClient(socket, DECLINE_START_MATCH, NULL);
+
 		} else{
 			User * firstUser = userDB->findUserBySocket(socket);
 			User * secondUser = userDB->findUserBySocket(otherSocket);
 
+			userDB->changeUserState(firstUser->socket, User::STATE_DEFAULT);
+			userDB->changeUserState(secondUser->socket, User::STATE_DEFAULT);
 			sendCommandToClient(otherSocket, DECLINE_START_MATCH, firstUser->username.c_str());
 
 		}

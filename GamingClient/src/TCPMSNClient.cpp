@@ -90,16 +90,15 @@ void TCPMSNClient::seek() {
 }
 
 void TCPMSNClient::answerRequest(string answer){
-	string userName = this->thread->getWAitingSocket();
-	this->thread->setState(false);
-	this->thread->setWAitingSocket("NULL");
+	string userName = this->thread->getWaitingSocket();
+	this->thread->setWaitingSocket("");
 	if(answer == "YES"|| answer == "yes")
 	{
-		sendCommand(ACCEPT_REQUEST_MATCH, userName.c_str());
+		sendCommand(ACCEPT_REQUEST_MATCH, NULL);
 	}
 	else
 	{
-		sendCommand(DECLINE_START_MATCH, userName.c_str());
+		sendCommand(DECLINE_START_MATCH, NULL);
 	}
 }
 

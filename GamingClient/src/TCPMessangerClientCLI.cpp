@@ -120,6 +120,10 @@ int main() {
 			client->connect(ip);
 
 		}
+		else if(commandType == "cl"){
+			string ip = "127.0.0.1";
+			client->connect(ip);
+		}
 		// open session
 		else if(commandType == "o"){
 			string ip;

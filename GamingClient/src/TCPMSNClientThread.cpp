@@ -42,18 +42,7 @@ vector<string> splitString(const string& inputString, const char* delim){
 	return result;
 }
 
-bool TCPMSNClientThread::getState(){
-	return currStateWaiting;
-}
-string TCPMSNClientThread::getWAitingSocket(){
-	return waitingSocketName;
-}
-void TCPMSNClientThread::setState(bool newState){
-	this->currStateWaiting = newState;
-}
-void TCPMSNClientThread::setWAitingSocket(string newName){
-	this->waitingSocketName = newName;
-}
+
 
 void TCPMSNClientThread::run()
 {
@@ -110,15 +99,10 @@ void TCPMSNClientThread::run()
 		{
 			int msgLength = htonl(* ( (int *) &buffer[4] ) );
 			string userName(&buffer[8],msgLength);
-			if(currStateWaiting == true){
-				cout << "You did not reply to " << waitingSocketName << "'s request - please reply." << endl;
-				cout << "You got a new request from " << userName << " but it was ignored" << endl;
-			}
-			else{
-				waitingSocketName = userName;
-				cout << "You got a new match request from " << userName << endl;
-				cout << "would you like to accept the new match with " << userName << "? format: r  <yes/no>" << endl;
-			}
+			waitingUserName = userName;
+			cout << "You got a new match request from " << userName << endl;
+			cout << "would you like to accept the new match with " << userName << "? format: r  <yes/no>" << endl;
+
 			break;
 		}
 		case DECLINE_START_MATCH:
@@ -128,11 +112,33 @@ void TCPMSNClientThread::run()
 			cout << "User " +otherUserName + " declined your request." << endl;
 			break;
 		}
+		case GAME_STARTED:
+		{
+			int msgLength = htonl(* ( (int *) &buffer[4] ) );
+			string otherUserName(&buffer[8],msgLength);
+			cout << "started game with " +otherUserName << endl;
+			break;
+		}
+		case REQUEST_MATCH_BUSY:
+		{
+			int msgLength = htonl(* ( (int *) &buffer[4] ) );
+			string userName(&buffer[8],msgLength);
+			cout << "You got a new request from " << userName << " but it was ignored because you have a pending request" << endl;
+
+			break;
+		}
 		}
 	}
 	cout << "client thread stopped" << endl;
 }
 
+string TCPMSNClientThread::getWaitingSocket(){
+	return waitingUserName;
+}
+
+void TCPMSNClientThread::setWaitingSocket(string newName){
+	waitingUserName = newName;
+}
 
 
 

@@ -36,6 +36,7 @@ public:
 
 private:
 
+	User(const User& other);
 	int state;
 	/**
 	 * this method checks that the input state is valid

@@ -34,6 +34,7 @@
 #define ACCEPT_REQUEST_MATCH       16
 #define DECLINE_START_MATCH        17
 #define GAME_STARTED               18
+#define REQUEST_MATCH_BUSY         19
 
 #define TEST_PEER_NAME "test"
 #define SESSION_REFUSED_MSG "Connection to peer refused, peer might be busy or disconnected, try again later"
