@@ -37,10 +37,15 @@ private:
 	BrokerMng* parent;
 	User * peerOne;
 	User * peerTwo;
-	MTCPListener* listener;
+	//MTCPListener* listener;
 
-	UDPSocket* udpPeerOne;
-	UDPSocket* udpPeerTwo;
+	UDPSocket* brokerUdpSocket;
+
+	string peer1IP;
+	string peer2IP;
+
+	int peer1port;
+	int peer2port;
 
 	ISpecificGame* theGame;
 
