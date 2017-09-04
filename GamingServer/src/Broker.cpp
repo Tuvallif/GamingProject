@@ -14,6 +14,7 @@
 #include<unistd.h>    //write
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include "TCGame.h"
 
 using namespace std;
 
