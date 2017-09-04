@@ -7,19 +7,22 @@ CPP_SRCS += \
 ../src/TCPMSNClient.cpp \
 ../src/TCPMSNClientThread.cpp \
 ../src/TCPMessangerClientCLI.cpp \
-../src/TCPMessangerClientTest.cpp 
+../src/TCPMessangerClientTest.cpp \
+../src/UDPClientThread.cpp 
 
 OBJS += \
 ./src/TCPMSNClient.o \
 ./src/TCPMSNClientThread.o \
 ./src/TCPMessangerClientCLI.o \
-./src/TCPMessangerClientTest.o 
+./src/TCPMessangerClientTest.o \
+./src/UDPClientThread.o 
 
 CPP_DEPS += \
 ./src/TCPMSNClient.d \
 ./src/TCPMSNClientThread.d \
 ./src/TCPMessangerClientCLI.d \
-./src/TCPMessangerClientTest.d 
+./src/TCPMessangerClientTest.d \
+./src/UDPClientThread.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

@@ -3,7 +3,8 @@ src/TCPMSNClient.d: ../src/TCPMSNClient.cpp ../src/TCPMessangerProtocol.h \
  /home/dmanzur/workspace/SocketUtils/TCPSocket.h \
  ../src/TCPMSNClientThread.h \
  /home/dmanzur/workspace/SocketUtils/MTCPListener.h \
- /home/dmanzur/workspace/SocketUtils/TCPSocket.h
+ /home/dmanzur/workspace/SocketUtils/TCPSocket.h ../src/UDPClientThread.h \
+ /home/dmanzur/workspace/SocketUtils/UDPSocket.h
 
 ../src/TCPMessangerProtocol.h:
 
@@ -18,3 +19,7 @@ src/TCPMSNClient.d: ../src/TCPMSNClient.cpp ../src/TCPMessangerProtocol.h \
 /home/dmanzur/workspace/SocketUtils/MTCPListener.h:
 
 /home/dmanzur/workspace/SocketUtils/TCPSocket.h:
+
+../src/UDPClientThread.h:
+
+/home/dmanzur/workspace/SocketUtils/UDPSocket.h:

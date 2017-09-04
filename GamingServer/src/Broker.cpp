@@ -14,7 +14,6 @@
 #include<unistd.h>    //write
 #include <netinet/in.h>
 #include <sys/socket.h>
-#include "TCGame.h"
 
 using namespace std;
 
@@ -52,20 +51,29 @@ Broker::Broker(User* peer1, User* peer2, BrokerMng* parent) {
 	//listener->add(peerOne->socket);
 	//listener->add(peerTwo->socket);
 
-	brokerUdpSocket = new UDPSocket(peer1->socket->getPort());
+	brokerUdpSocket = new UDPSocket(MSNGR_PORT);
+
+	cout<<"1 sockets peers address: "<<peer1->udpPort<<" "<<peer2->udpPort<<endl;
+
 
 	peer1IP = peer1->socket->fromAddr();
-	peer1port = peer1->socket->getPort();
+	peer1port = atoi(peer1->udpPort.c_str());
 
 	peer2IP = peer2->socket->fromAddr();
-	peer2port = peer2->socket->getPort();
+
+	peer2port = atoi(peer2->udpPort.c_str());
+
+
+	cout<<"2 sockets peers address: "<<peer1port<<" "<<peer2port<<endl;
+
 
 	this->theGame = new TCGame(peer1->username, peer2->username);
 	string openningMsg = this->theGame->startGame();
 
+
 	brokerUdpSocket->sendTo(openningMsg, peer1IP,peer1port);
 	brokerUdpSocket->sendTo(openningMsg, peer2IP,peer2port);
-
+	this->start();
 }
 
 Broker::~Broker() {

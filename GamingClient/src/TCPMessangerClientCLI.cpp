@@ -10,6 +10,8 @@ using namespace npl;
 
 string curWaitingUser = "NULL";
 
+
+
 void printInstructions(){
 	cout<<"To open connect to server type: c <server ip>"<<endl;
 	cout<<"To register or login to server type: l <user name>:<password>"<<endl;
@@ -78,9 +80,6 @@ char* getCharFromString(string toConvert){
 }
 
 
-
-
-
 string getWordAtIndexWithDlm(string  sentance, int index, const char* delimiter){
 	char* sentanceInChar = getCharFromString(sentance);
 	char* convertor = strtok(sentanceInChar, delimiter);
@@ -119,6 +118,11 @@ int main() {
 
 			client->connect(ip);
 
+		}
+		else if(commandType == "a"){
+			string answer = command.substr(1);
+			cout<<"command type is -a- with msg: "<<answer<<endl;
+			client->sendAnswerToGame(answer);
 		}
 		else if(commandType == "cl"){
 			string ip = "127.0.0.1";

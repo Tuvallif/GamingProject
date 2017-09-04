@@ -24,6 +24,7 @@ namespace npl {
 
 
 class TCPMSNClientThread : public MThread {
+
 public:
 	TCPMSNClientThread(TCPSocket * socket);
 	bool getState();

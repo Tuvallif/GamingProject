@@ -9,7 +9,6 @@
 #include "MTCPListener.h"
 #include <unistd.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string>
 #include <cstring>
 #include "TCPMessangerProtocol.h"
@@ -60,7 +59,7 @@ void Dispatcher::run() {
 	{
 		if ( sockets.empty() )
 		{
-			cout << "Dispatcher waiting 1 second" << endl;
+			//cout << "Dispatcher waiting 1 second" << endl;
 			usleep( 1000000 );
 			continue;
 		}
@@ -196,7 +195,11 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 		int dataLength = ntohl( *( (int * ) ( messageLength ) ) );
 		char dataBuffer[dataLength];
 		readFromSocket(socket, dataBuffer, sizeof(dataBuffer));
-		string secondUserName(dataBuffer, dataLength);
+		string name(dataBuffer);
+		int pos = name.find(":");
+		string secondUserName = name.substr(0,pos);
+		this->udpPort1 = name.substr(pos+1,5);
+       cout<<"start match udp port: "<<this->udpPort1<<endl;
 		int status = userDB->checkAvilability(secondUserName);
 
 		if(status == -1) {
@@ -310,6 +313,13 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 			// peer not found. send session refused to socket
 			sendCommandToClient(socket, SESSION_REFUSED, NULL);
 		} else{
+			char udpPort[4];
+			readFromSocket(socket, udpPort, sizeof(udpPort));
+			int udpPortLength = ntohl( *( (int * ) ( udpPort ) ) );
+			char udpPortbuff[udpPortLength];
+			readFromSocket(socket, udpPortbuff, sizeof(udpPortbuff));
+			string uport(udpPortbuff, udpPortLength);
+			cout<<"dispatcher accept uport: "<<uport<<endl;
 			User * firstUser = userDB->findUserBySocket(socket);
 			User * secondUser = userDB->findUserBySocket(otherSocket);
 			userDB->changeUserState(firstUser->socket, User::STATE_PLAYING);
@@ -319,6 +329,8 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 			listener->remove(socket);
 			listener->remove(otherSocket);
 			// create new broker and pass them to the broker
+			firstUser->udpPort = this->udpPort1;
+			secondUser->udpPort = this->udpPort2;
 			dispatcherHandler->managePeerSession(firstUser, secondUser);
 		}
 		break;

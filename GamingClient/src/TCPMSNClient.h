@@ -17,6 +17,8 @@
 #include "MThread.h"
 #include "TCPMessangerProtocol.h"
 #include "TCPMSNClientThread.h"
+#include "UDPClientThread.h"
+#include "UDPSocket.h"
 
 using namespace std;
 namespace npl {
@@ -35,6 +37,8 @@ private:
 	TCPMessangerClientHandler *handler;
 	TCPSocket *socket;
 	TCPMSNClientThread * thread;
+	UDPClientThread* udpThread;
+	int udpPort ;
 	int sendCommand(int cmd,const char* buff, const char * buff2 = NULL);
 
 public:
@@ -77,6 +81,8 @@ public:
 	void exit();
 
 	int getPort();
+
+	void sendAnswerToGame(string answer);
 
 };
 

@@ -82,7 +82,7 @@ string TCGame::getIncomingMsgFromPeer(int player, string msg) {
 		ifGameEnded = true;
 		string winner = gameWinner();
 		strcat(answerToPlayer, winner.c_str());
-		strcat(answerToPlayer," player is the winner");
+		strcat(answerToPlayer,"  is the winner !");
 		strcat(answerToPlayer,"\nGood game! ");
 		return answerToPlayer;
 	}

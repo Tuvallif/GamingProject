@@ -26,7 +26,7 @@ public:
 	static const int STATE_BUSY = 3;
 	string username;
 	TCPSocket * socket;
-
+    string udpPort;
 
 	User(string username, TCPSocket * socket);
 

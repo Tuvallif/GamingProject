@@ -15,6 +15,9 @@
 #include "BrokerMng.h"
 #include <vector>
 #include <iostream>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <map>
 #include <assert.h>
 #include <iterator>
@@ -49,6 +52,8 @@ private:
 	int sendCommandToClient(TCPSocket * socket, int cmd,const char* buff);
 	void seek(TCPSocket* requestingSocket);
 	TCPSocket* findSocketInMap(TCPSocket* socketKey);
+    string udpPort1;
+    string udpPort2;
 
 };
 
