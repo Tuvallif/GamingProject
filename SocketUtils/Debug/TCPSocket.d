@@ -1,3 +1,3 @@
-TCPSocket.d: ../TCPSocket.cpp ../TCPSocket.h
+TCPSocket.o: ../TCPSocket.cpp ../TCPSocket.h
 
 ../TCPSocket.h:

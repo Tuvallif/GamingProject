@@ -1,3 +1,3 @@
-Tools.d: ../Tools.cpp ../Tools.h
+Tools.o: ../Tools.cpp ../Tools.h
 
 ../Tools.h:

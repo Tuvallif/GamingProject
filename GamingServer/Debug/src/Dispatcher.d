@@ -1,22 +1,22 @@
-src/Dispatcher.d: ../src/Dispatcher.cpp ../src/Dispatcher.h \
- /home/dmanzur/workspace/SocketUtils/TCPSocket.h \
- /home/dmanzur/workspace/SocketUtils/MThread.h \
+src/Dispatcher.o: ../src/Dispatcher.cpp ../src/Dispatcher.h \
+ /home/user/GamingProject/SocketUtils/TCPSocket.h \
+ /home/user/GamingProject/SocketUtils/MThread.h \
  ../src/TCPMessangerProtocol.h \
- /home/dmanzur/workspace/SocketUtils/MTCPListener.h \
- /home/dmanzur/workspace/SocketUtils/TCPSocket.h ../src/BrokerMng.h \
+ /home/user/GamingProject/SocketUtils/MTCPListener.h \
+ /home/user/GamingProject/SocketUtils/TCPSocket.h ../src/BrokerMng.h \
  ../src/UsersDataBase.h ../src/User.h
 
 ../src/Dispatcher.h:
 
-/home/dmanzur/workspace/SocketUtils/TCPSocket.h:
+/home/user/GamingProject/SocketUtils/TCPSocket.h:
 
-/home/dmanzur/workspace/SocketUtils/MThread.h:
+/home/user/GamingProject/SocketUtils/MThread.h:
 
 ../src/TCPMessangerProtocol.h:
 
-/home/dmanzur/workspace/SocketUtils/MTCPListener.h:
+/home/user/GamingProject/SocketUtils/MTCPListener.h:
 
-/home/dmanzur/workspace/SocketUtils/TCPSocket.h:
+/home/user/GamingProject/SocketUtils/TCPSocket.h:
 
 ../src/BrokerMng.h:
 

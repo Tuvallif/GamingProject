@@ -44,7 +44,7 @@ all: GamingServer
 GamingServer: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -L"/home/dmanzur/workspace/SocketUtils/Debug" -L"/home/dmanzur/workspace/TimeCalculateGame/Debug" -o "GamingServer" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -L"/home/user/GamingProject/SocketUtils/Debug" -L"/home/user/GamingProject/TimeCalculateGame/Debug" -o "GamingServer" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

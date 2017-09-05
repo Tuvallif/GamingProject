@@ -1,27 +1,27 @@
-src/TCPMSNServer.d: ../src/TCPMSNServer.cpp \
- /home/dmanzur/workspace/GamingServer/src/Server.h \
- /home/dmanzur/workspace/SocketUtils/TCPSocket.h ../src/TCPMSNServer.h \
- ../src/Dispatcher.h /home/dmanzur/workspace/SocketUtils/MThread.h \
+src/TCPMSNServer.o: ../src/TCPMSNServer.cpp \
+ /home/user/GamingProject/GamingServer/src/Server.h \
+ /home/user/GamingProject/SocketUtils/TCPSocket.h ../src/TCPMSNServer.h \
+ ../src/Dispatcher.h /home/user/GamingProject/SocketUtils/MThread.h \
  ../src/TCPMessangerProtocol.h \
- /home/dmanzur/workspace/SocketUtils/MTCPListener.h \
- /home/dmanzur/workspace/SocketUtils/TCPSocket.h ../src/BrokerMng.h \
+ /home/user/GamingProject/SocketUtils/MTCPListener.h \
+ /home/user/GamingProject/SocketUtils/TCPSocket.h ../src/BrokerMng.h \
  ../src/UsersDataBase.h ../src/User.h
 
-/home/dmanzur/workspace/GamingServer/src/Server.h:
+/home/user/GamingProject/GamingServer/src/Server.h:
 
-/home/dmanzur/workspace/SocketUtils/TCPSocket.h:
+/home/user/GamingProject/SocketUtils/TCPSocket.h:
 
 ../src/TCPMSNServer.h:
 
 ../src/Dispatcher.h:
 
-/home/dmanzur/workspace/SocketUtils/MThread.h:
+/home/user/GamingProject/SocketUtils/MThread.h:
 
 ../src/TCPMessangerProtocol.h:
 
-/home/dmanzur/workspace/SocketUtils/MTCPListener.h:
+/home/user/GamingProject/SocketUtils/MTCPListener.h:
 
-/home/dmanzur/workspace/SocketUtils/TCPSocket.h:
+/home/user/GamingProject/SocketUtils/TCPSocket.h:
 
 ../src/BrokerMng.h:
 

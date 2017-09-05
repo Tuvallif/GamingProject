@@ -1,3 +1,3 @@
-MThread.d: ../MThread.cpp ../MThread.h
+MThread.o: ../MThread.cpp ../MThread.h
 
 ../MThread.h:

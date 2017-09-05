@@ -1,26 +1,27 @@
-src/TCPMSNClientThread.d: ../src/TCPMSNClientThread.cpp \
+src/TCPMSNClientThread.o: ../src/TCPMSNClientThread.cpp \
  ../src/TCPMessangerProtocol.h \
- /home/dmanzur/workspace/SocketUtils/MThread.h ../src/TCPMSNClient.h \
- /home/dmanzur/workspace/SocketUtils/TCPSocket.h \
+ /home/user/GamingProject/SocketUtils/MThread.h ../src/TCPMSNClient.h \
+ /home/user/GamingProject/SocketUtils/TCPSocket.h \
  ../src/TCPMSNClientThread.h \
- /home/dmanzur/workspace/SocketUtils/MTCPListener.h \
- /home/dmanzur/workspace/SocketUtils/TCPSocket.h ../src/UDPClientThread.h \
- /home/dmanzur/workspace/SocketUtils/UDPSocket.h
+ /home/user/GamingProject/SocketUtils/MTCPListener.h \
+ /home/user/GamingProject/SocketUtils/TCPSocket.h \
+ ../src/UDPClientThread.h \
+ /home/user/GamingProject/SocketUtils/UDPSocket.h
 
 ../src/TCPMessangerProtocol.h:
 
-/home/dmanzur/workspace/SocketUtils/MThread.h:
+/home/user/GamingProject/SocketUtils/MThread.h:
 
 ../src/TCPMSNClient.h:
 
-/home/dmanzur/workspace/SocketUtils/TCPSocket.h:
+/home/user/GamingProject/SocketUtils/TCPSocket.h:
 
 ../src/TCPMSNClientThread.h:
 
-/home/dmanzur/workspace/SocketUtils/MTCPListener.h:
+/home/user/GamingProject/SocketUtils/MTCPListener.h:
 
-/home/dmanzur/workspace/SocketUtils/TCPSocket.h:
+/home/user/GamingProject/SocketUtils/TCPSocket.h:
 
 ../src/UDPClientThread.h:
 
-/home/dmanzur/workspace/SocketUtils/UDPSocket.h:
+/home/user/GamingProject/SocketUtils/UDPSocket.h:

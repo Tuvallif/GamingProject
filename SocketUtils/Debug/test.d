@@ -1,3 +1,3 @@
-test.d: ../test.cpp ../test.h
+test.o: ../test.cpp ../test.h
 
 ../test.h:

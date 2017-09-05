@@ -1,14 +1,14 @@
-src/UsersDataBase.d: ../src/UsersDataBase.cpp \
+src/UsersDataBase.o: ../src/UsersDataBase.cpp \
  ../src/TCPMessangerProtocol.h \
- /home/dmanzur/workspace/SocketUtils/MThread.h ../src/UsersDataBase.h \
- /home/dmanzur/workspace/SocketUtils/TCPSocket.h ../src/User.h
+ /home/user/GamingProject/SocketUtils/MThread.h ../src/UsersDataBase.h \
+ /home/user/GamingProject/SocketUtils/TCPSocket.h ../src/User.h
 
 ../src/TCPMessangerProtocol.h:
 
-/home/dmanzur/workspace/SocketUtils/MThread.h:
+/home/user/GamingProject/SocketUtils/MThread.h:
 
 ../src/UsersDataBase.h:
 
-/home/dmanzur/workspace/SocketUtils/TCPSocket.h:
+/home/user/GamingProject/SocketUtils/TCPSocket.h:
 
 ../src/User.h:

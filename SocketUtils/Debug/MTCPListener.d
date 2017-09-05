@@ -1,4 +1,4 @@
-MTCPListener.d: ../MTCPListener.cpp ../MTCPListener.h ../TCPSocket.h
+MTCPListener.o: ../MTCPListener.cpp ../MTCPListener.h ../TCPSocket.h
 
 ../MTCPListener.h:
 

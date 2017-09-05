@@ -1,3 +1,3 @@
-UDPSocket.d: ../UDPSocket.cpp ../UDPSocket.h
+UDPSocket.o: ../UDPSocket.cpp ../UDPSocket.h
 
 ../UDPSocket.h:

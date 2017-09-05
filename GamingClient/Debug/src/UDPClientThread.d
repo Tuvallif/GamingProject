@@ -1,10 +1,10 @@
-src/UDPClientThread.d: ../src/UDPClientThread.cpp \
- /home/dmanzur/workspace/GamingClient/src/UDPClientThread.h \
- /home/dmanzur/workspace/SocketUtils/UDPSocket.h \
- /home/dmanzur/workspace/SocketUtils/MThread.h
+src/UDPClientThread.o: ../src/UDPClientThread.cpp \
+ /home/user/GamingProject/GamingClient/src/UDPClientThread.h \
+ /home/user/GamingProject/SocketUtils/UDPSocket.h \
+ /home/user/GamingProject/SocketUtils/MThread.h
 
-/home/dmanzur/workspace/GamingClient/src/UDPClientThread.h:
+/home/user/GamingProject/GamingClient/src/UDPClientThread.h:
 
-/home/dmanzur/workspace/SocketUtils/UDPSocket.h:
+/home/user/GamingProject/SocketUtils/UDPSocket.h:
 
-/home/dmanzur/workspace/SocketUtils/MThread.h:
+/home/user/GamingProject/SocketUtils/MThread.h:

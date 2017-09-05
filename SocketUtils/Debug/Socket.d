@@ -1,4 +1,4 @@
-Socket.d: ../Socket.cpp ../Socket.h ../FileInterface.h
+Socket.o: ../Socket.cpp ../Socket.h ../FileInterface.h
 
 ../Socket.h:
 

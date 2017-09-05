@@ -44,7 +44,7 @@ all: GamingClient
 GamingClient: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -L"/home/dmanzur/workspace/SocketUtils/Debug" -o "GamingClient" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -L"/home/user/GamingProject/SocketUtils/Debug" -o "GamingClient" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

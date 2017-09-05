@@ -1,3 +1,3 @@
-FileInterface.d: ../FileInterface.cpp ../FileInterface.h
+FileInterface.o: ../FileInterface.cpp ../FileInterface.h
 
 ../FileInterface.h:
