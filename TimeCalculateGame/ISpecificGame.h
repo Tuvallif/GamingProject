@@ -19,5 +19,6 @@ class ISpecificGame {
         virtual string endGame() = 0;
         virtual string getIncomingMsgFromPeer(int player,string msg) = 0;
         virtual string startGame()=0;
+        virtual string getTheGameWinner()=0;
 };
 #endif /* ISPECIFICGAME_H_ */

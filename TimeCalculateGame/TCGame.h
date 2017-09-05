@@ -32,6 +32,7 @@ private:
     unsigned int numberOfQuestion;
     bool isQuestionWasAnswered;
     int currAnswer;
+    string theGameWinner;
 
     string gameWinner();
 	string generateLowTimeDescriptions();
@@ -48,7 +49,7 @@ public:
     virtual string startGame();
 	//game functions
 	TCGame(string player1name, string user2name);
-
+    string getTheGameWinner();
 };
 
 

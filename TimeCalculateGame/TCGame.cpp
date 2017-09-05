@@ -17,6 +17,7 @@ TCGame::TCGame(string player1name, string player2name) {
 	this->numberOfQuestion = 1;
 	this->isQuestionWasAnswered = false;
 	this->currAnswer = 0;
+
 }
 
 string TCGame::gameWinner() {
@@ -33,6 +34,10 @@ string TCGame::gameWinner() {
 bool TCGame::isGameEnded() {
 
 	return this->ifGameEnded;
+}
+
+string TCGame::getTheGameWinner(){
+	return this->theGameWinner;
 }
 
 string TCGame::getIncomingMsgFromPeer(int player, string msg) {
@@ -80,8 +85,8 @@ string TCGame::getIncomingMsgFromPeer(int player, string msg) {
 
 	if (NUMBER_OF_QUESTIONS+1 == numberOfQuestion ) {
 		ifGameEnded = true;
-		string winner = gameWinner();
-		strcat(answerToPlayer, winner.c_str());
+		this->theGameWinner = gameWinner();
+		strcat(answerToPlayer, theGameWinner.c_str());
 		strcat(answerToPlayer,"  is the winner !");
 		strcat(answerToPlayer,"\nGood game! ");
 		return answerToPlayer;
@@ -118,6 +123,7 @@ string TCGame::endGame() {
 	string endGameMsg =
 			"The game is over since session was closed\nThere is no winner in this round\nGAME OVER";
 
+	this->theGameWinner = "none";
 	return endGameMsg;
 }
 

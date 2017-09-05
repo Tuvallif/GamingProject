@@ -45,16 +45,16 @@ string getWordAtIndexWithDlm(string sentance, int index,
 Broker::Broker(User* peer1, User* peer2, BrokerMng* parent) {
 	this->parent = parent;
 
-	peerOne=peer1;
-	peerTwo=peer2;
+	peerOne = peer1;
+	peerTwo = peer2;
 	//listener = new MTCPListener();
 	//listener->add(peerOne->socket);
 	//listener->add(peerTwo->socket);
 
 	brokerUdpSocket = new UDPSocket(MSNGR_PORT);
 
-	cout<<"1 sockets peers address: "<<peer1->udpPort<<" "<<peer2->udpPort<<endl;
-
+	cout << "1 sockets peers address: " << peer1->udpPort << " "
+			<< peer2->udpPort << endl;
 
 	peer1IP = peer1->socket->fromAddr();
 	peer1port = atoi(peer1->udpPort.c_str());
@@ -63,54 +63,33 @@ Broker::Broker(User* peer1, User* peer2, BrokerMng* parent) {
 
 	peer2port = atoi(peer2->udpPort.c_str());
 
-
-	cout<<"2 sockets peers address: "<<peer1port<<" "<<peer2port<<endl;
-
+	cout << "2 sockets peers address: " << peer1port << " " << peer2port
+			<< endl;
 
 	this->theGame = new TCGame(peer1->username, peer2->username);
 	string openningMsg = this->theGame->startGame();
 
-
-	brokerUdpSocket->sendTo(openningMsg, peer1IP,peer1port);
-	brokerUdpSocket->sendTo(openningMsg, peer2IP,peer2port);
+	brokerUdpSocket->sendTo(openningMsg, peer1IP, peer1port);
+	brokerUdpSocket->sendTo(openningMsg, peer2IP, peer2port);
 	this->start();
 }
 
 Broker::~Broker() {
 	//delete listener;
+	if (brokerUdpSocket != NULL)
+		delete brokerUdpSocket;
+	if (theGame != NULL)
+		delete theGame;
 }
 
 void Broker::run() {
-	//const vector<TCPSocket *> & sockets = listener->socketsList();
 	while (!theGame->isGameEnded()) {
-//		if ( sockets.empty() )
-//		{
-//			cout << "Broker waiting 1 second" << endl;
-//			usleep( 1000000 );
-//			continue;
-//		}
-		//cout << "Dispatcher selecting " << sockets.size() << " sockets " << endl;
 
-		//to change
-		//TCPSocket * readySocket = listener->listen();
 
 		char messageFromPeer[300];
 		memset(messageFromPeer, 0, sizeof(messageFromPeer));
 
 		brokerUdpSocket->recv(messageFromPeer, sizeof(messageFromPeer));
-
-//           if ( readySocket ) {
-//			cout << "Broker socket ready" << endl;
-//			char command[4];
-//			int length = readFromSocket(readySocket, command, sizeof(command));
-//			if ( length == 0 )
-//			{
-//				cout << "socket error. disconnecting client" << endl;
-//				break;
-//			}
-//          int commandType = ntohl( *( (int * ) command ) );
-//          string toSend = new string();
-//          strToChar(command);
 
 		cout << "received msg from " << brokerUdpSocket->fromAddr() << endl;
 
@@ -125,19 +104,28 @@ void Broker::run() {
 		//here we send the game answer o both of players
 		brokerUdpSocket->sendTo(gameAnswer, peer1IP, peer1port);
 		brokerUdpSocket->sendTo(gameAnswer, peer2IP, peer2port);
-//        *******
-//      cout << "this is the sent command" << toSend << endl;
-//			if ( ! handleMessage(readySocket, command) ){
-//				break;
-//			}
-//        TODO : parse and handle the commands : disconnect, open session...
-//        }
+
 	}
+
+	string winner = theGame->getTheGameWinner();
+
 	cout << "Broker terminated" << endl;
 	sendCommandToClient(peerOne->socket, CLOSE_SESSION_WITH_PEER, NULL);
 	sendCommandToClient(peerTwo->socket, CLOSE_SESSION_WITH_PEER, NULL);
+
+	//string winner = theGam
+	if (strcmp(winner.c_str(),peerOne->username.c_str())==0){
 	parent->releasePeer(peerOne, 20);
 	parent->releasePeer(peerTwo, 10);
+	} else if (strcmp(winner.c_str(),peerTwo->username.c_str())==0){
+		parent->releasePeer(peerOne, 10);
+		parent->releasePeer(peerTwo, 20);
+	}
+	else{
+		parent->releasePeer(peerOne, 0);
+		parent->releasePeer(peerTwo, 0);
+	}
+
 	parent->deleteBroker(this);
 }
 

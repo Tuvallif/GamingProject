@@ -320,6 +320,7 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 			readFromSocket(socket, udpPortbuff, sizeof(udpPortbuff));
 			string uport(udpPortbuff, udpPortLength);
 			cout<<"dispatcher accept uport: "<<uport<<endl;
+			this->udpPort2 = uport;
 			User * firstUser = userDB->findUserBySocket(socket);
 			User * secondUser = userDB->findUserBySocket(otherSocket);
 			userDB->changeUserState(firstUser->socket, User::STATE_PLAYING);
