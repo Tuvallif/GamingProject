@@ -39,7 +39,7 @@ private:
 	TCPMSNClientThread * thread;
 	UDPClientThread* udpThread;
 	int udpPort ;
-	int sendCommand(int cmd,const char* buff, const char * buff2 = NULL);
+	int sendCommand(int cmd,const char* buff, const char * buff2 = NULL, const char * buff3 = NULL);
 
 public:
 
@@ -83,6 +83,8 @@ public:
 	int getPort();
 
 	void sendAnswerToGame(string answer);
+
+	void showScore();
 
 };
 

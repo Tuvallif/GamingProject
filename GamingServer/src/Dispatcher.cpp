@@ -18,7 +18,7 @@ using namespace std;
 
 namespace npl {
 Dispatcher::Dispatcher(DispatcherHandler* handler) : MThread() {
-	cout << "Dispatcher created" << endl;
+	//cout << "Dispatcher created" << endl;
 	userDB = new UsersDataBase(USERS_DB_FILE);
 	this->dispatcherHandler = handler;
 	listener = new MTCPListener();
@@ -32,6 +32,7 @@ Dispatcher::~Dispatcher() {
 void Dispatcher::addPeer(TCPSocket* peer){
 	cout << "Adding peer " << peer->fromAddr() << ":" << peer->peerPort();
 	cout << endl;
+	userDB->findUserBySocket(peer)->changeState(User::STATE_DEFAULT);
 	listener->add(peer);
 };
 
@@ -66,7 +67,7 @@ void Dispatcher::run() {
 		//cout << "Dispatcher selecting " << sockets.size() << " sockets " << endl;
 		TCPSocket * readySocket = listener->listen();
 		if ( readySocket ) {
-			cout << "Dispatcher socket ready" << endl;
+			//cout << "Dispatcher socket ready" << endl;
 			char commandType[4];
 			int length = readFromSocket(readySocket, commandType, sizeof(commandType));
 
@@ -77,8 +78,8 @@ void Dispatcher::run() {
 				continue;
 			}
 			int command = ntohl( *( (int * ) commandType ) );
-			cout << "received command " << command << " from " << readySocket->fromAddr() << ":" << readySocket->peerPort();
-			cout << endl;
+			//cout << "received command " << command << " from " << readySocket->fromAddr() << ":" << readySocket->peerPort();
+			//cout << endl;
 			// TODO if command length is 0, close the peer and remove it from listener
 			handleMessage(readySocket, command);
 			// TODO : parse and handle the commands : disconnect, open session...
@@ -126,49 +127,7 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 {
 	switch(commandType)
 	{
-	/*
-	case OPEN_SESSION_WITH_PEER: {
-		char messageLength[4];
-		readFromSocket(socket, messageLength, sizeof(messageLength));
-		int dataLength = ntohl( *( (int * ) ( messageLength ) ) );
-		char dataBuffer[dataLength];
-		readFromSocket(socket, dataBuffer, sizeof(dataBuffer));
-		string data(dataBuffer, dataLength);
-		cout << "got message length " << dataLength << " command " << data.c_str() << endl;
-		const vector<TCPSocket *> & sockets = listener->socketsList();
-		TCPSocket * foundPeer = NULL;
-		for( vector<TCPSocket *>::const_iterator it = sockets.begin(); it != sockets.end() ; ++it)
-		{
-			TCPSocket * peer = * it;
-			if ( socket == peer ) {
-				// don't check against yourself
-				continue;
-			}
-			char port[16];
-			sprintf(port, "%d", peer->peerPort());
-			string peerAddress = peer->fromAddr() + ":" + port;
-			cout << "checking if requested peer " << data << " is " << peerAddress << endl;
-			if ( data == peerAddress )
-			{
-				foundPeer = peer;
-				break;
-			}
-		}
-		if ( foundPeer == NULL )
-		{
-			// peer not found. send session refused to socket
-			sendCommandToClient( socket, SESSION_REFUSED, NULL);
-		} else{
-			sendCommandToClient(socket, SESSION_ESTABLISHED, NULL);
-			sendCommandToClient(foundPeer, SESSION_ESTABLISHED, NULL);
-			listener->remove(socket);
-			listener->remove(foundPeer);
-			// create new broker and pass them to the broker
-			dispatcherHandler->managePeerSession(socket, foundPeer);
-		}
-		break;
-	}
-	 */
+
 	case SEEK:
 	{
 		User* secondUser = userDB->seek(socket);
@@ -176,10 +135,11 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 		//Other user also seeking state - start a match
 		if(secondUser != NULL){
 			User * firstUser = userDB->findUserBySocket(socket);
-			userDB->changeUserState(socket, User::STATE_BUSY);
-			userDB->changeUserState(secondUser->socket, User::STATE_BUSY);
 			sendCommandToClient(socket, GAME_STARTED, secondUser->username.c_str());
 			sendCommandToClient(secondUser->socket, GAME_STARTED, firstUser->username.c_str());
+
+			userDB->changeUserState(firstUser->socket, User::STATE_PLAYING);
+			userDB->changeUserState(secondUser->socket, User::STATE_PLAYING);
 			listener->remove(socket);
 			listener->remove(secondUser->socket);
 			// create new broker and pass them to the broker
@@ -198,8 +158,8 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 		string name(dataBuffer);
 		int pos = name.find(":");
 		string secondUserName = name.substr(0,pos);
-		this->udpPort1 = name.substr(pos+1,5);
-       cout<<"start match udp port: "<<this->udpPort1<<endl;
+
+        // cout<<"start match udp port: "<<this->udpPort1<<endl;
 		int status = userDB->checkAvilability(secondUserName);
 
 		if(status == -1) {
@@ -281,6 +241,7 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 		char usernameBuffer[usernameLength];
 		readFromSocket(socket, usernameBuffer, sizeof(usernameBuffer));
 		string username(usernameBuffer, usernameLength);
+
 		char passwordLengthBuff[4];
 		readFromSocket(socket, passwordLengthBuff, sizeof(passwordLengthBuff));
 		int passwordLength = ntohl( *( (int * ) ( passwordLengthBuff ) ) );
@@ -288,7 +249,16 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 		readFromSocket(socket, passwordBuffer, sizeof(passwordBuffer));
 		string password(passwordBuffer, passwordLength);
 
-		if(userDB->login(username, password, socket)){
+		char udpPortLengthBuff[4];
+		readFromSocket(socket, udpPortLengthBuff, sizeof(udpPortLengthBuff));
+		int udpPortLength = ntohl( *( (int * ) ( udpPortLengthBuff ) ) );
+		char udpPortBuffer[udpPortLength];
+		readFromSocket(socket, udpPortBuffer, sizeof(udpPortBuffer));
+		string udpPort(udpPortBuffer, udpPortLength);
+
+		cout << "login from " << username << " udp port " << udpPort<< endl;
+
+		if(userDB->login(username, password, atoi(udpPort.c_str()), socket )){
 			sendCommandToClient(socket, LOGIN_REGISTER_SUCCESFULL, NULL);
 		}else{
 			sendCommandToClient(socket, LOGIN_REGISTER_FAILED, NULL);
@@ -319,8 +289,8 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 			char udpPortbuff[udpPortLength];
 			readFromSocket(socket, udpPortbuff, sizeof(udpPortbuff));
 			string uport(udpPortbuff, udpPortLength);
-			cout<<"dispatcher accept uport: "<<uport<<endl;
-			this->udpPort2 = uport;
+			//cout<<"dispatcher accept uport: "<<uport<<endl;
+
 			User * firstUser = userDB->findUserBySocket(socket);
 			User * secondUser = userDB->findUserBySocket(otherSocket);
 			userDB->changeUserState(firstUser->socket, User::STATE_PLAYING);
@@ -330,8 +300,6 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 			listener->remove(socket);
 			listener->remove(otherSocket);
 			// create new broker and pass them to the broker
-			firstUser->udpPort = this->udpPort1;
-			secondUser->udpPort = this->udpPort2;
 			dispatcherHandler->managePeerSession(firstUser, secondUser);
 		}
 		break;
@@ -357,6 +325,11 @@ void Dispatcher::handleMessage(TCPSocket * socket, int commandType )
 
 		}
 		break;
+	}
+	case SHOW_SCORE:
+	{
+		string scoreData= userDB->getScoreAsChar();
+		sendCommandToClient(socket, SHOW_SCORE, scoreData.c_str());
 	}
 	default:
 	{

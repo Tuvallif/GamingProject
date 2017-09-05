@@ -57,11 +57,11 @@ Broker::Broker(User* peer1, User* peer2, BrokerMng* parent) {
 			<< peer2->udpPort << endl;
 
 	peer1IP = peer1->socket->fromAddr();
-	peer1port = atoi(peer1->udpPort.c_str());
+	peer1port = peer1->udpPort;
 
 	peer2IP = peer2->socket->fromAddr();
 
-	peer2port = atoi(peer2->udpPort.c_str());
+	peer2port = peer2->udpPort;
 
 	cout << "2 sockets peers address: " << peer1port << " " << peer2port
 			<< endl;
@@ -115,9 +115,14 @@ void Broker::run() {
 
 	//string winner = theGam
 	if (strcmp(winner.c_str(),peerOne->username.c_str())==0){
-	parent->releasePeer(peerOne, 20);
-	parent->releasePeer(peerTwo, 10);
+		peerOne->addPoints(20);
+		peerTwo->addPoints(10);
+		parent->releasePeer(peerOne, 20);
+		parent->releasePeer(peerTwo, 10);
+
 	} else if (strcmp(winner.c_str(),peerTwo->username.c_str())==0){
+		peerOne->addPoints(10);
+		peerTwo->addPoints(20);
 		parent->releasePeer(peerOne, 10);
 		parent->releasePeer(peerTwo, 20);
 	}
@@ -179,7 +184,7 @@ bool Broker::handleMessage(TCPSocket * socket, const char * commandStr) {
 		break;
 
 	}
-		return true;
+	return true;
 	}
 }
 

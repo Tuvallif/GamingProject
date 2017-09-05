@@ -23,13 +23,7 @@ namespace npl{
 
 UsersDataBase::UsersDataBase(  const string  & databaseFileName  ) :
 									fileName( databaseFileName ) {
-	/*
-	registerUser("tuval", "12345");
-	registerUser("ran", "rrrrr");
-	string test;
-	getPassword("ran", test);
-	cout << "ran password '" << test << "'" << endl;
-	 */
+
 }
 
 UsersDataBase::~UsersDataBase() {
@@ -40,7 +34,7 @@ UsersDataBase::~UsersDataBase() {
  * try to login the user.if the user does not exist register it
  * return true if the user logged in successfully
  */
-bool UsersDataBase::login( const string & username, const string & password, TCPSocket * socket ){
+bool UsersDataBase::login( const string & username, const string & password, int udpPort, TCPSocket * socket ){
 	list<User*>::iterator it = users.begin();
 	while (it != users.end()) {
 		if ((*it)->username == username) {
@@ -52,7 +46,7 @@ bool UsersDataBase::login( const string & username, const string & password, TCP
 	string DBpassword;
 	if(getPassword(username, DBpassword)){
 		if(hashPasswordString(password) == DBpassword){
-			User * user = new User(username, socket);
+			User * user = new User(username, socket, udpPort);
 			cout<< "user " << username << " is now logged in" << endl;
 			users.push_back(user);
 			return true;
@@ -62,7 +56,7 @@ bool UsersDataBase::login( const string & username, const string & password, TCP
 	} else {
 		registerUser( username, password );
 		cout<< "user " << username << " is now registered and logged in" << endl;
-		User * user = new User(username, socket);
+		User * user = new User(username, socket, udpPort);
 		users.push_back(user);
 		return true;
 	}
@@ -209,6 +203,34 @@ User* UsersDataBase::getSeekingUser(User* seeker){
 
 	return NULL;
 }
+
+multimap<int,string> UsersDataBase::getScoreBoard(){
+
+	multimap <int,string> toReturn;
+	for(list<User*>::iterator it = users.begin(); it != users.end(); it++){
+		toReturn.insert (std::pair<int,string>((*it)->getUserScore(),(*it)->username));
+    }
+
+	return toReturn;
+}
+
+string UsersDataBase::getScoreAsChar(){
+	multimap<int,string> mapScore = this->getScoreBoard();
+	string toReturn;
+	for(multimap<int,string>::const_reverse_iterator it = mapScore.rbegin();
+	    it != mapScore.rend(); ++it)
+	{
+		toReturn = toReturn + it->second;
+		toReturn = toReturn + ":";
+		char buf[16];
+		sprintf(buf, "%d", it->first);
+		toReturn = toReturn + buf;
+		toReturn = toReturn + ",";
+	}
+
+	return toReturn;
+}
+
 
 string UsersDataBase::hashPasswordString(const string & password ){
 	char passwordBuffer[64];

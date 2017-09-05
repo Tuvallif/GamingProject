@@ -25,9 +25,9 @@ public:
 
 	virtual ~Tools();
 
-	char* getCharFromString(string toConvert);
+	static char* getCharFromString(string toConvert);
 
-	string getWordAtIndexWithDlm(string  sentance, int index, const char* delimiter);
+	static string getWordAtIndexWithDlm(string  sentance, int index, const char* delimiter);
 
 
 };

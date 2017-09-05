@@ -18,10 +18,7 @@ void printInstructions(){
 	cout<<"To get list of online users type: li "<<endl;
 	cout<<"To start a match with a specific user type: m <user name> "<<endl;
 	cout<<"To start a match with a random user type: se "<<endl;
-	cout<<"To open session type with peer: o <peer ip:port>"<<endl;
-	cout<<"After the session is opened, to send message type: s <message>"<<endl;
-	cout<<"To close opened session type: cs"<<endl;
-	cout<<"To disconnect from server type: d"<<endl;
+	cout <<"To see the score board of connected users type: b " << endl;
 	cout<<"To exit type: x"<<endl;
 }
 
@@ -85,11 +82,13 @@ string getWordAtIndexWithDlm(string  sentance, int index, const char* delimiter)
 	char* convertor = strtok(sentanceInChar, delimiter);
 	for(int i = 0; i < index ; i++){
 		convertor = strtok(NULL, delimiter);
-		cout << convertor << endl;
+	}
+	if (convertor == NULL ) {
+		return "p";
 	}
 	string toReturn(convertor);
 	if(toReturn.empty()){
-		toReturn = "p";
+		return "p";
 	}
 
 	return toReturn;
@@ -106,6 +105,9 @@ int main() {
 		string command, commandType;
 		cout<< "type your command:" << endl;
 		std::getline (std::cin,command);
+		if (command.empty()) {
+			continue;
+		}
 		//commandType = getFirstWord(command);
 		commandType = getWordAtIndexWithDlm(command, 0, " ");
 
@@ -121,7 +123,7 @@ int main() {
 		}
 		else if(commandType == "a"){
 			string answer = command.substr(1);
-			cout<<"command type is -a- with msg: "<<answer<<endl;
+			//cout<<"command type is -a- with msg: "<<answer<<endl;
 			client->sendAnswerToGame(answer);
 		}
 		else if(commandType == "cl"){
@@ -149,7 +151,7 @@ int main() {
 			usernameAndPassword = getWordAtIndexWithDlm(command, 1, " ");
 			username = getWordAtIndexWithDlm(usernameAndPassword, 0, ":");
 			password = getWordAtIndexWithDlm(usernameAndPassword, 1, ":");
-			cout <<"trying to login with user name: "<< username << " and password " << password <<endl;
+			//cout <<"trying to login with user name: "<< username << " and password " << password <<endl;
 			//getting only ip
 			client->loginRegister(username, password);
 		}
@@ -175,9 +177,9 @@ int main() {
 		}
 		//send a message
 		else if(commandType == "s"){
-		msg = command.substr(2, command.length());
-		//msg is GOOD
-		if(msg.size() > 0 && msg[0] == ' ') msg.erase(0,1);
+			msg = command.substr(2, command.length());
+			//msg is GOOD
+			if(msg.size() > 0 && msg[0] == ' ') msg.erase(0,1);
 			client->sendMessage(msg);
 		}
 		//close session
@@ -202,9 +204,12 @@ int main() {
 			client->answerRequest(answer);
 		}
 		//wrong input - handeled
-			else if(commandType == "p"){
+		else if(commandType == "p"){
 			cout<< "There was a problem!!!" << endl;
 			printInstructions();
+		}
+		else if(commandType == "b"){
+			client->showScore();
 		}
 
 		//wrong input unhandeled

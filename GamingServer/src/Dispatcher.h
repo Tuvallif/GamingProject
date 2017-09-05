@@ -52,8 +52,6 @@ private:
 	int sendCommandToClient(TCPSocket * socket, int cmd,const char* buff);
 	void seek(TCPSocket* requestingSocket);
 	TCPSocket* findSocketInMap(TCPSocket* socketKey);
-    string udpPort1;
-    string udpPort2;
 
 };
 

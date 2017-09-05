@@ -28,7 +28,7 @@ public:
 	 * try to login the user.if the user does not exist register it
 	 * return true if the user logged in successfully
 	 */
-	bool login( const string & username, const string & password, TCPSocket * socket );
+	bool login( const string & username, const string & password, int udpPort, TCPSocket * socket );
 
 
 	/**
@@ -73,6 +73,10 @@ public:
 	 */
 	User* getSeekingUser(User* seeker);
 
+	multimap<int,string> getScoreBoard();
+
+	string getScoreAsChar();
+
 private:
 
 	/**
@@ -100,7 +104,7 @@ private:
 	 */
 	void changeStateToSeek(TCPSocket* socketToChange);
 
-
+	void addNumber(string name, int score);
 
 	const string fileName;
 	list< User * > users;

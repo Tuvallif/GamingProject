@@ -155,6 +155,7 @@ string TCGame::generateAtimeQuestion() {
 
 	char ret[50];
 	memset(ret, 0, sizeof(ret));
+	srand(time(NULL));
 	int num = rand() % 3 + 1;
 
 	sprintf(ret,"%s%d%s%d\n","Question ",numberOfQuestion,"/",5);
@@ -176,7 +177,7 @@ string TCGame::generateAtimeQuestion() {
 }
 
 string TCGame::generateLowTimeDescriptions() {
-
+	srand(time(NULL));
 	int num = rand() % 3;
 
 	switch (num) {
@@ -192,6 +193,7 @@ string TCGame::generateLowTimeDescriptions() {
 	return "";
 }
 string TCGame::generateHighTimeDescriptions() {
+	srand(time(NULL));
 	int num = rand() % 3;
 
 	switch (num) {

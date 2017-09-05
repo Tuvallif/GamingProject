@@ -5,7 +5,7 @@ src/TCPMSNClientThread.o: ../src/TCPMSNClientThread.cpp \
  ../src/TCPMSNClientThread.h \
  /home/user/GamingProject/SocketUtils/MTCPListener.h \
  /home/user/GamingProject/SocketUtils/TCPSocket.h \
- ../src/UDPClientThread.h \
+ /home/user/GamingProject/SocketUtils/Tools.h ../src/UDPClientThread.h \
  /home/user/GamingProject/SocketUtils/UDPSocket.h
 
 ../src/TCPMessangerProtocol.h:
@@ -21,6 +21,8 @@ src/TCPMSNClientThread.o: ../src/TCPMSNClientThread.cpp \
 /home/user/GamingProject/SocketUtils/MTCPListener.h:
 
 /home/user/GamingProject/SocketUtils/TCPSocket.h:
+
+/home/user/GamingProject/SocketUtils/Tools.h:
 
 ../src/UDPClientThread.h:
 

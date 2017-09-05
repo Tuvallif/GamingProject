@@ -26,17 +26,22 @@ public:
 	static const int STATE_BUSY = 3;
 	string username;
 	TCPSocket * socket;
-    string udpPort;
+    int udpPort;
 
-	User(string username, TCPSocket * socket);
+	User(string username, TCPSocket * socket, int udpPort);
 
 	bool changeState(int newState);
 
 	int getState();
 
+	int getUserScore();
+
+	void addPoints(int pointsToAdd);
+
 private:
 
 	User(const User& other);
+	int score;
 	int state;
 	/**
 	 * this method checks that the input state is valid

@@ -12,10 +12,12 @@ using namespace std;
 namespace npl {
 
 
-User::User(string username, TCPSocket * socket){
+User::User(string username, TCPSocket * socket, int udpPort){
 	this->username = username;
 	this->socket = socket;
 	this->state = STATE_DEFAULT;
+	this->score = 0;
+	this->udpPort = udpPort;
 }
 
 int User::getState(){
@@ -38,6 +40,14 @@ bool User::validInputState(int inputState){
 	}
 
 	return false;
+}
+
+int User::getUserScore(){
+	return score;
+}
+
+void User::addPoints(int pointsToAdd){
+	this->score += pointsToAdd;
 }
 
 

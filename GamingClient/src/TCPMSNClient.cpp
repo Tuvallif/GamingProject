@@ -75,7 +75,10 @@ bool TCPMSNClient::openSession(string ip, int port) {
 
 bool TCPMSNClient::loginRegister(string username, string password) {
 
-	int res = sendCommand(LOGIN_REGISTER, username.c_str(), password.c_str());
+	char buff[20];
+	sprintf(buff, "%d", this->udpPort);
+	cout << "client udp port is " << this->udpPort << endl;
+	int res = sendCommand(LOGIN_REGISTER, username.c_str(), password.c_str(), buff);
 	sessionIsActive = (res > -1);
 	return sessionIsActive;
 }
@@ -159,7 +162,11 @@ void TCPMSNClient::exit() {
 	sendCommand(EXIT, "other user asked to exit");
 }
 
-int TCPMSNClient::sendCommand(int cmd, const char* buff, const char * buff2) {
+void TCPMSNClient::showScore(){
+	sendCommand(SHOW_SCORE,NULL);
+}
+
+int TCPMSNClient::sendCommand(int cmd, const char* buff, const char * buff2, const char * buff3) {
 	int cmdNet = htonl(cmd);
 	int res = socket->write((char*) &cmdNet, 4);
 	if (res < 4) {
@@ -185,6 +192,18 @@ int TCPMSNClient::sendCommand(int cmd, const char* buff, const char * buff2) {
 			return -1;
 		}
 		res = socket->write(buff2, len);
+		if (res < len) {
+			return -1;
+		}
+	}
+	if (buff3 != NULL) {
+		int len = strlen(buff3);
+		int lenNet = htonl(len);
+		res = socket->write((char*) &lenNet, 4);
+		if (res < 4) {
+			return -1;
+		}
+		res = socket->write(buff3, len);
 		if (res < len) {
 			return -1;
 		}

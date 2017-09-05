@@ -8,7 +8,7 @@
 #ifndef TCGAME_H_
 #define TCGAME_H_
 
-#define NUMBER_OF_QUESTIONS 5
+#define NUMBER_OF_QUESTIONS 1
 
 #include "ISpecificGame.h"
 #include <stdlib.h>
@@ -16,6 +16,8 @@
 #include <string.h>
 #include <string>
 #include <iostream>
+#include <stdlib.h>
+#include <time.h>
 
 using namespace std;
 

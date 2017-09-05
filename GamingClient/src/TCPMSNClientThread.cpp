@@ -19,7 +19,7 @@ using namespace std;
 using namespace npl;
 
 TCPMSNClientThread::TCPMSNClientThread(TCPSocket * socket) :
-						MThread()
+								MThread()
 {
 	this->socket = socket;
 	string waitingSocketName = "NULL";
@@ -46,12 +46,12 @@ vector<string> splitString(const string& inputString, const char* delim){
 
 void TCPMSNClientThread::run()
 {
-	cout << "client thread running" << endl;
+	//cout << "client thread running" << endl;
 
 	// TODO add stop boolean to stop when session disconnect
 	while (true)
 	{
-		cout << "client thread listening" << endl;
+		//cout << "client thread listening" << endl;
 		listener->add(socket);
 		listener->listen();
 
@@ -59,7 +59,7 @@ void TCPMSNClientThread::run()
 		int len = socket->recv(buffer, 1024);
 
 		int msg = htonl(* ( (int *) buffer ) );
-		cout << "got message " << msg << " length " << len << endl;
+		//cout << "got message " << msg << " length " << len << endl;
 
 		switch(msg){
 		case SEND_MSG_TO_PEER:
@@ -127,9 +127,29 @@ void TCPMSNClientThread::run()
 
 			break;
 		}
+		case SHOW_SCORE:
+		{
+
+
+			int msgLength = htonl(* ( (int *) &buffer[4] ) );
+			string scoreData(&buffer[8],msgLength);
+			//just a random sign different from #
+			cout << "This is the SCORE BOARD!" << endl;
+
+			vector<string> scoreBoard = splitString(scoreData, ",");
+			for(int index = 0 ; index < scoreBoard.size() ; index++) {
+				cout << (index + 1) << " . " << scoreBoard[ index ] << endl;
+			}
+
+			break;
+		}
+		default:
+		{
+			cout <<"the message was not understood, please try again." << endl;
+		}
 		}
 	}
-	cout << "client thread stopped" << endl;
+	//cout << "client thread stopped" << endl;
 }
 
 string TCPMSNClientThread::getWaitingSocket(){

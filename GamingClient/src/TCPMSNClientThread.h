@@ -18,6 +18,7 @@
 #include "TCPMessangerProtocol.h"
 #include "TCPMSNClient.h"
 #include "MTCPListener.h"
+#include "Tools.h"
 
 using namespace std;
 namespace npl {
