@@ -32,7 +32,10 @@ Dispatcher::~Dispatcher() {
 void Dispatcher::addPeer(TCPSocket* peer){
 	cout << "Adding peer " << peer->fromAddr() << ":" << peer->peerPort();
 	cout << endl;
-	userDB->findUserBySocket(peer)->changeState(User::STATE_DEFAULT);
+	User * user = userDB->findUserBySocket(peer);
+	if ( user != NULL) {
+		user->changeState(User::STATE_DEFAULT);
+	}
 	listener->add(peer);
 };
 

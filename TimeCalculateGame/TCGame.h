@@ -8,7 +8,7 @@
 #ifndef TCGAME_H_
 #define TCGAME_H_
 
-#define NUMBER_OF_QUESTIONS 1
+#define NUMBER_OF_QUESTIONS 5
 
 #include "ISpecificGame.h"
 #include <stdlib.h>
